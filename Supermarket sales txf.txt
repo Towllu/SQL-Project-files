@@ -1,0 +1,186 @@
+Select * from [dbo].[file]
+
+
+select Quantity,Avg_Price,Delivery_Charges,a.dis_pct from 
+ (Select Quantity,Avg_Price,Delivery_Charges, discount_pct , 
+discount_pct/100 as dis_pct
+from [dbo].[file]) a
+
+Select count (distinct CustomerID) as Total_Customer from [dbo].[file]
+where CustomerID is not null
+
+
+Select count (Transaction_ID) as Total_transaction from [dbo].[file]
+where Transaction_ID is not null
+
+
+Select cast (sum( Delivery_Charges ) as decimal (10,2)) as Total_Del_Charges from [dbo].[file]
+
+
+Select Quantity,Avg_Price, Delivery_Charges, avg_price * Quantity + 
+Delivery_Charges as Revenue from [dbo].[file]
+
+select cast (sum (Quantity*Avg_Price*(discount_pct/100)) as decimal (10,2)) as Total_dis from [dbo].[file]
+
+
+select cast (sum (avg_price * Quantity + Delivery_Charges) as decimal (10,2)) as Total_revenue  from [dbo].[file]
+
+
+Select cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue
+from [dbo].[file]
+
+
+Select sum( Quantity ) as Total_Quantity_sold,
+ cast (avg( Quantity ) as decimal (10,2) )as avg_Quantity_sold, 
+ max( Quantity ) as max_Quantity_sold,
+  min( Quantity ) as min_Quantity_sold
+from [dbo].[file]
+
+
+Select cast (avg( Avg_Price ) as decimal (10,2)) as avg_Price,
+cast (max( Avg_Price ) as decimal (10,2))as max_price, 
+cast (min( Avg_Price ) as decimal (10,2))as min_price
+from [dbo].[file]
+
+
+select distinct CustomerID,count (Transaction_ID) as Total_transaction,
+cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue,
+sum( Quantity ) as Total_Quantity_sold
+from [dbo].[file]
+where Avg_Price is not null
+group by CustomerID
+order by Grand_total_revenue desc
+
+
+select distinct CustomerID,count (Transaction_ID) as Total_transaction,
+cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue,
+sum( Quantity ) as Total_Quantity_sold
+from [dbo].[file]
+where Avg_Price is not null
+group by CustomerID
+order by Grand_total_revenue asc
+
+
+Select Coupon_status,
+Count ( Transaction_ID) as Total_transaction,
+count (distinct CustomerID) as Total_Customer,
+sum( Quantity ) as Total_Quantity_sold,
+cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue
+from [dbo].[file]
+where Coupon_status is not null
+group by Coupon_status
+order by Grand_total_revenue desc
+
+
+Select Coupon_code,
+avg ( Discount_pct) as Avg_discount,
+Count ( Transaction_ID) as Total_transaction,
+count (distinct CustomerID) as Total_Customer,
+sum( Quantity ) as Total_Quantity_sold,
+cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue
+from [dbo].[file]
+where Coupon_code is not null --and location = 'chicago'
+group by Coupon_code
+order by Grand_total_revenue desc
+
+
+Select location, count (distinct CustomerID) as Total_Customer,
+count ( Transaction_ID) as Total_transaction, 
+sum( Quantity ) as Total_Quantity_sold,
+cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue
+from [dbo].[file]
+where location is not null
+group by location 
+order by Grand_total_revenue desc
+
+
+Select Product_Description, 
+cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue,
+sum( Quantity ) as Total_Quantity_sold,count (Transaction_ID) as Total_transaction,
+count (distinct CustomerID) as Total_Customer
+from [dbo].[file]
+where Avg_Price is not null
+group by Product_Description
+order by Grand_total_revenue desc
+
+
+Select product_category, 
+cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue,
+sum( Quantity ) as Total_Quantity_sold, count (Transaction_ID) as Total_transaction,
+count (distinct CustomerID) as Total_Customer
+from [dbo].[file]
+where Avg_Price is not null --and Location = 'chicago'
+group by product_category
+order by Grand_total_revenue desc
+
+
+Select Gender ,
+case 
+when Gender = 'M' then 'Male'
+when Gender = 'F' then 'Female'
+end gender_ 
+From [dbo].[file]
+
+
+Select case 
+when Gender = 'M' then 'Male'
+when Gender = 'F' then 'Female'end gender_ ,
+cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue,
+sum( Quantity ) as Total_Quantity_sold, count (Transaction_ID) as Total_transaction,
+count (distinct CustomerID) as Total_Customer
+From [dbo].[file]
+where Gender is not null
+group by Gender 
+
+
+Select datename (month,transaction_date) as Month_,
+cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue,
+count (Transaction_ID) as Total_transaction,sum( Quantity ) as Total_Quantity,
+count (distinct CustomerID) as Total_Customer
+from [dbo].[file]
+where transaction_date is not null
+group by datename (month,transaction_date) 
+order by Grand_total_revenue desc
+
+
+Select datename (weekday,transaction_date) as day_,
+cast (sum (Quantity*Avg_Price - 
+(Quantity*Avg_Price)*(discount_pct/100) + Delivery_Charges)
+as decimal (10,2)) as Grand_total_revenue,
+count (Transaction_ID) as Total_transaction,sum( Quantity ) as Total_Quantity,
+count (distinct CustomerID) as Total_Customer
+from [dbo].[file]
+where transaction_date is not null
+group by datename (weekday,transaction_date) 
+order by Grand_total_revenue desc
+
+
+
+
+
+
+
+
+
+
+

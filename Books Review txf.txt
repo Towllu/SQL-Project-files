@@ -1,0 +1,152 @@
+Select * from [dbo].[Top-100 Trending Books]
+
+
+Select * from [dbo].[customer reviews]
+
+
+Select top_.book_title, author,genre,reviewer,review_title,is_verified, date,
+book_price, rating, reviewer_rating, year_of_publication
+from [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+
+
+Select count (top_.book_title)  as Total_Books_sold,
+count (distinct top_.book_title) as Total_Books,
+count ( distinct genre)  as Total_Genre,
+count ( distinct author)  as Total_Author,
+count ( distinct reviewer)  as Total_Reviewer
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+
+
+Select 
+cast (min(book_price) as decimal (10,2)) as min_book_price,
+cast (max(book_price) as decimal (10,2)) as max_book_price,
+cast (avg(book_price) as decimal (10,2))as avg_book_price
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+
+
+ Select min(reviewer_rating) as min_reviewer_rating,
+ max(reviewer_rating) as max_reviewer_rating,
+ avg (reviewer_rating) as avg_reviewer_rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ 
+
+Select  cast(avg (rating) as decimal (10,2)) as Avg_Rating,
+cast(min (rating) as decimal (10,2)) as min_Rating ,
+cast(max (rating) as decimal (10,2)) as max_Rating,
+cast(count (rating) as decimal (10,2)) as count_Rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+
+
+Select datepart (Year,date) year, 
+cast (avg(book_price) as decimal (10,2)) as avg_Book_price,
+cast(avg (rating) as decimal (10,2)) as Avg_Rating,
+avg (reviewer_rating) as avg_reviewer_rating,
+cast(count (rating) as decimal (10,2)) as count_Rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ --where datepart (Year,date) = 2023
+ group by datepart (Year,date)
+ order by datepart (Year,date) asc
+
+
+Select datepart (month,date),top_.book_title  , 
+cast (avg(book_price) as decimal (10,2)) as avg_Book_price,
+cast(avg (rating) as decimal (10,2)) as Avg_Rating,
+avg (reviewer_rating) as avg_reviewer_rating,
+cast(count (rating) as decimal (10,2)) as count_Rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ --where datepart (Year,date) = 2023 
+ group by datepart (month,date),top_.book_title
+ order by avg_Book_price asc
+
+
+Select  year_of_publication, top_.book_title
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ --group by year_of_publication
+order by top_.book_title asc ;
+
+
+Select top_.book_title, cast (avg(book_price) as decimal (10,2)) as avg_Book_price,
+cast(avg (rating) as decimal (10,2)) as Avg_Rating,
+avg (reviewer_rating) as avg_reviewer_rating,
+cast(count (rating) as decimal (10,2)) as count_Rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ group by top_.book_title
+ order by Avg_Rating desc
+
+
+Select top_.book_title,  cast (avg(book_price) as decimal (10,2)) as avg_Book_price,
+cast(avg (rating) as decimal (10,2)) as Avg_Rating,
+avg (reviewer_rating) as avg_reviewer_rating,
+count (reviewer_rating) as count_rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ --where top_.book_title ='The Exchange: After The Firm (The Firm Series)'
+ group by top_.book_title
+ order by Avg_Rating asc
+
+
+Select author, cast (avg(book_price) as decimal (10,2)) as avg_Book_price,
+cast(avg (rating) as decimal (10,2)) as Avg_Rating,
+avg (reviewer_rating) as avg_reviewer_rating,
+count (reviewer_rating) as count_rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ group by author
+ order by Avg_Rating desc
+
+
+Select genre, cast (avg(book_price) as decimal (10,2)) as avg_Book_price,
+cast(avg (rating) as decimal (10,2)) as Avg_Rating,
+avg (reviewer_rating) as avg_reviewer_rating,
+count (reviewer_rating) as count_rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ group by genre
+ order by Avg_Rating desc
+
+
+Select reviewer_rating, count (reviewer_rating) as Total_rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ group by reviewer_rating
+order by Total_rating desc
+
+
+Select reviewer, cast (avg(book_price) as decimal (10,2)) as avg_Book_price,
+cast(avg (rating) as decimal (10,2)) as Avg_Rating,
+avg (reviewer_rating) as avg_reviewer_rating,
+count (reviewer_rating) as count_rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ group by reviewer
+order by Avg_Rating desc
+
+
+Select reviewer,top_.book_title, count (reviewer_rating) as count_rating,
+cast(avg (rating) as decimal (10,2)) as Avg_Rating,
+avg (reviewer_rating) as avg_reviewer_rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ where reviewer = 'Amazon Customer'
+ group by reviewer,top_.book_title
+order by avg_rating desc
+
+
+Select top_.book_title, cast(avg (rating) as decimal (10,2)) as Avg_Rating,
+avg (reviewer_rating) as avg_reviewer_rating,
+count (reviewer_rating) as count_rating
+from  [dbo].[Top-100 Trending Books] Top_
+ join [dbo].[customer reviews] Rev on Top_.book_title = Rev.book_name
+ group by top_.book_title
+order by avg_rating desc
+
+

@@ -1,0 +1,94 @@
+Select * from [dbo].[Airline Dataset ]
+
+-- Total passengers traveled
+Select count( distinct [Passenger_ID]) Total_Passenger
+from [dbo].[Airline Dataset ]
+
+
+-- Passengers traveled per Age_Cat
+Select [Age_Cat], count( distinct [Passenger_ID]) Total_Passenger
+from  [dbo].[Airline Dataset ] 
+group by [Age_Cat]
+order by Total_Passenger desc
+
+--Total passengers traveled Per Gender
+Select [Gender], count( distinct [Passenger_ID]) as Count_Passenger
+from [dbo].[Airline Dataset ] 
+Group by [Gender]
+
+-- Flight Status per Passengerss traveled
+Select [Flight_Status], count( distinct [Passenger_ID]) as Count_Passenger
+from [dbo].[Airline Dataset ] 
+Group by [Flight_Status]
+
+
+--Total passengers traveled Per continents
+Select [Continents],count( distinct [Passenger_ID]) as Count_Passenger
+from [dbo].[Airline Dataset ] 
+Group by  [Continents]
+Order by Count_Passenger desc
+
+
+--Total passengers traveled Per country
+Select [Country_Name],count( distinct [Passenger_ID]) as Count_Passenger
+from [dbo].[Airline Dataset ] 
+Group by  [Country_Name]
+Order by Count_Passenger desc
+
+Select [Country_Name],count( distinct [Passenger_ID]) as Count_Passenger
+from [dbo].[Airline Dataset ] 
+Group by  [Country_Name]
+Order by Count_Passenger Asc
+
+--Passengers Traveled per airport
+Select [Airport_Name],count( distinct [Passenger_ID]) as Count_Passenger
+from [dbo].[Airline Dataset ] 
+Group by  [Airport_Name]
+Order by Count_Passenger desc
+
+--Total passengers traveled per Day
+Select Datename(dw,[Departure_Date]) As Days_week,
+count( distinct [Passenger_ID]) as Count_Passenger
+from [dbo].[Airline Dataset ] 
+Group by  Datename(dw,[Departure_Date])
+Order by Count_Passenger desc
+
+
+--Total passengers traveled Per month
+Select Datename(month,[Departure_Date]) As Month,
+count( distinct [Passenger_ID]) as Count_Passenger
+from [dbo].[Airline Dataset ] 
+Group by  Datename(month,[Departure_Date])
+Order by Count_Passenger desc
+
+
+--Count of countries per continent 
+Select [Continents], count (distinct [Country_Name]) As Count_country
+from [dbo].[Airline Dataset ] 
+Group by  [Continents]
+--order by Count_country desc
+
+
+-- Passengers traveled per age categories
+select a.Age_cat, count ([Age] ) as Count_Age_Cat
+from (Select age, 
+case 
+when age > 70 then 'Old'
+when age >= 45 then 'Middle Age'
+when age >= 18 then 'Adult'
+ else 'Children'  end as Age_Cat
+from [dbo].[Airline Dataset ] ) a
+group by a.Age_cat
+order by Count_Age_Cat desc
+
+
+--Add age categories to table
+Alter Table [dbo].[Airline Dataset ]
+Add Age_Cat varchar (50)
+
+Update [dbo].[Airline Dataset ]
+set Age_Cat = case 
+when age > 70 then 'Old'
+when age >= 45 then 'Middle Age'
+when age >= 18 then 'Adult'
+ else 'Children'  end
